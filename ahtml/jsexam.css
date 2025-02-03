@@ -1,0 +1,44 @@
+body {
+  color: white;
+  background-color: rgb(48, 48, 48);
+}
+p {
+  font-size: 15px;
+}
+#button {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 1%;
+  margin: 1%;
+  background-color: white;
+  color: black;
+  border-radius: 5%;
+}
+#button a {
+  color: black;
+  text-decoration: none;
+}
+#secondp {
+    color: blueviolet;
+}
+
+#todolist li:hover {
+    text-decoration: underline;
+}
+
+#dice_container {
+    display: inline-block;
+    width: 300px;
+    height: 100px;
+    background-color: lightgray;
+}
+
+#dice_container img {
+    width: 40px;
+    height: 40px;
+}
+
+#dice_box li {
+    display: inline-block;
+}
