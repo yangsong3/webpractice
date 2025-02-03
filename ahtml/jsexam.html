@@ -379,51 +379,181 @@
       입력 외 문서나 브라우저의 상태 변화를 브라우저가 자바스크립트에게 알리는
       notification.<br />
 
-      <b>이벤트리스너란</b><br>
-      발생한 이벤트에 대한 적절한 대처를 하기 위해 작성된 자바스크립트 코드<br>
+      <b>이벤트리스너란</b><br />
+      발생한 이벤트에 대한 적절한 대처를 하기 위해 작성된 자바스크립트 코드<br />
 
-      <b>주요 이벤트리스너 목록</b><br>
-      onkeydown : 키보드의 아무 키를 누르는 순간<br>
-      onkeypress : 키보드의 알파뉴메릭 키 누르는 순간<br>
-      onkeyup : 키보드 누른 키 놓는 순간<br>
-      onclick : 좌클릭 <br>
-      oncontextmenu : 우클릭 <br>
-      ondbclick : 더블클릭<br>
-      onmousedown : 마우스의 물리 버튼 누르는 경우<br>
-      onmouseenter <br>
-      onmouseleave <br>
-      onmouseover : 마우스 커서가 객체 영역 안으로 들어오는 순간(자식 객체에게 전파)<br>
-      onmouseout : 마우스 커서가 객체 영역 밖으로 나가는 순간(자식 객체에게 전파)<br>
-      onmouseup : 누른 마우스 버튼 놓는 순간<br>
-      onwheel <br>
-      onabort : 이미지나 문서 로딩이 중단되는 경우<br>
-      onerror : 문서나 이미지, 리소스 등의 로딩에서 오류가 발생할 때<br>
-      onload <br>
-      onresize <br>
-      onfocus : 객체가 포커스를 가질  때<br>
-      onchange <br>
-      onreset : 폼이 reset 되는 경우<br>
-      onsearch : input type search 창에 엔터 입력시<br>
-      onselect : input 영역의 텍스트를 선택할 때<br>
-      onsubmimt <br>
+      <b>주요 이벤트리스너 목록</b><br />
+      onkeydown : 키보드의 아무 키를 누르는 순간<br />
+      onkeypress : 키보드의 알파뉴메릭 키 누르는 순간<br />
+      onkeyup : 키보드 누른 키 놓는 순간<br />
+      onclick : 좌클릭 <br />
+      oncontextmenu : 우클릭 <br />
+      ondbclick : 더블클릭<br />
+      onmousedown : 마우스의 물리 버튼 누르는 경우<br />
+      onmouseenter <br />
+      onmouseleave <br />
+      onmouseover : 마우스 커서가 객체 영역 안으로 들어오는 순간(자식 객체에게
+      전파)<br />
+      onmouseout : 마우스 커서가 객체 영역 밖으로 나가는 순간(자식 객체에게
+      전파)<br />
+      onmouseup : 누른 마우스 버튼 놓는 순간<br />
+      onwheel <br />
+      onabort : 이미지나 문서 로딩이 중단되는 경우<br />
+      onerror : 문서나 이미지, 리소스 등의 로딩에서 오류가 발생할 때<br />
+      onload <br />
+      onresize <br />
+      onfocus : 객체가 포커스를 가질 때<br />
+      onchange <br />
+      onreset : 폼이 reset 되는 경우<br />
+      onsearch : input type search 창에 엔터 입력시<br />
+      onselect : input 영역의 텍스트를 선택할 때<br />
+      onsubmimt <br />
     </p>
 
     <p>
-      <b>이벤트 리스너 만드는 방법</b><br>
-      1. HTML태그에 작성 => onclick="function()" <br>
-      2. DOM객체의 이벤트리스너 프로퍼티에 작성<br>
-      let pp = document.getElementById("pp"); // DOM 객체화
-      function x() {}; // 함수 선언
-      pp.onmouseover = x; // DOM객체의 이벤트리스너 프로퍼티에 함수를 등록
-      3. DOM객체의 addEventListener() 메서드로 등록<br>
-      addEventListener(eventName, listener[,useCapture]) 함수의 매개변수<br>
-      eventName : 이벤트 타입을 나타내는 문자열 click, load, keydown 등<br>
-      listener : 이벤트 리스너로 등록할 함수 이름<br>
-      useCapture : true로 놓는 경우 이벤트 흐름 중 캡처 단계에서 실행될 리스너로 등록하는 것<br>
-      fase로 등록하면 버블 단계에서 실행되는 리스너로 등록함, 기본값은 false<br>
-      pp.addEventListener("click",x);
-      pp.addEventListener("click", () => {});
+      <b>이벤트 리스너 만드는 방법</b><br />
+      1. HTML태그에 작성 => onclick="function()" <br />
+      2. DOM객체의 이벤트리스너 프로퍼티에 작성<br />
+      let pp = document.getElementById("pp"); // DOM 객체화 function x() {}; //
+      함수 선언 pp.onmouseover = x; // DOM객체의 이벤트리스너 프로퍼티에 함수를
+      등록 3. DOM객체의 addEventListener() 메서드로 등록<br />
+      addEventListener(eventName, listener[,useCapture]) 함수의 매개변수<br />
+      eventName : 이벤트 타입을 나타내는 문자열 click, load, keydown 등<br />
+      listener : 이벤트 리스너로 등록할 함수 이름<br />
+      useCapture : true로 놓는 경우 이벤트 흐름 중 캡처 단계에서 실행될 리스너로
+      등록하는 것<br />
+      fase로 등록하면 버블 단계에서 실행되는 리스너로 등록함, 기본값은 false<br />
+      pp.addEventListener("click",x);<br />
+      pp.addEventListener("click",function() {})<br />
+      pp.addEventListener("click", () => {});<br />
     </p>
+
+    <p>
+      <b>이벤트 객체란</b><br />
+      이벤트가 발생하면 브라우저는 발생한 이벤트에 대한 여러 정보를 담은 이벤트
+      객체를 만들어서 이벤트리스너에게 전달한다. onmousedown 이벤트의 경우
+      마우스 관련이기 때문에 마우스의 좌표 등 정보를 담은 마우스 이벤트 객체를
+      전달하고 onkeydown의 경우 키보드 관련으로 키보드의 어떤키가 눌렸는지
+      keycode등의 정보를 담아 전달한다.<br />
+    </p>
+    <p>
+      이벤트가 처리되고 나면 이벤트 객체는 소멸한다.<br />
+      브라우저는 한 개의 이벤트를 완전히 처리한 후 다음 이벤트를 처리하므로,
+      이벤트 리스너 실행 중에는 오직 한 개의 이벤트 객체만 존재한다.<br />
+    </p>
+
+    <div
+      id="eventprac"
+      style="
+        width: 300px;
+        height: 50px;
+        background-color: lightgray;
+        color: black;
+      "
+    ></div>
+
+    <p>
+      <b>이벤트 객체의 target 프로퍼티</b><br />
+      타겟 프로퍼티는 이벤트의 대상 객체를 가리킴 <br />
+      이벤트 타겟이란 이벤트를 유발시킨 객체를 의미함 <br />
+      target과 유사한 프로퍼티로 currentTarget 프로퍼티가 있다.<br />
+      currentTarget은 이벤트가 흘러가는 경로 상에 있는 DOM객체 중 현재 이벤트
+      리스너를 실행하고 있는 DOM객체를 가리킨다.<br />
+    </p>
+
+    <p>
+      type 프로퍼티는 현재 발생한 이벤트의 종류<br />
+      target 프로퍼티는 이벤트가 실제로 발생한 요소<br />
+      currentTarget 프로퍼티는 이벤트가 바인딩 된 요소<br />
+      defaultPrevented 프로퍼티는 이벤트의 디폴트 행동이 취소되었는지 여부 t/f
+      로 나타남<br />
+      preventDefault() 메서드는 이벤트의 디폴트 행동을 취소시키는 메서드<br />
+    </p>
+
+    <p>
+      HTML태그 중 몇몇은 특정 이벤트에 대해 디폴트 행동을 한다.<br />
+      a링크를 클릭하면 이동하는 것<br />
+      submit 버튼을 클릭하면 폼 데이터를 전송하는 것 <br />
+      reset을 클릭하면 폼이 초기화 되는 것<br />
+      wheel을 굴리면 브라우저 스크롤이 움직이는 것<br />
+    </p>
+    <a href="https://www.naver.com" onclick="return false" style="color: white"
+      >디폴트행동취소링크</a
+    >
+    <input type="checkbox" onclick="return false" />체크 안되는 체크박스
+    <a
+      href="https://www.naver.com"
+      onclick="event.preventDefault()"
+      style="color: white"
+      >preventDefault</a
+    >
+
+    <p>
+      이벤트의 흐름<br />
+      이벤트가 발생하면 이벤트는 타겟 객체에 전달된다.<br />
+      이벤트가 단번에 타겟 객체로 직접 전달되는 것이 아니라 window객체로부터
+      DOM트리를 타고 중간 DOM객체를 거쳐 타겟 객체로 이벤트가 흘러들어가고, 다시
+      반대 방향으로 이동하여 window 객체에 도달한 후 이벤트는 소멸한다.<br />
+    </p>
+    <p>
+      캡쳐단계 window 객체에서 타겟 객체까지 전파되는 과정<br />
+      버블단계 타겟 객체에서 거꾸로 window 객체까지 이벤트객체가 전파되는
+      과정<br />
+      DOM객체들은 동일한 이벤트에 대해 캡쳐 리스너와 버블 리스너를 모두 가질 수
+      있음.<br />
+    </p>
+
+    <button id="bt1">이벤트 캡쳐, 버블 리스너 버튼</button>
+
+    <p>
+      이벤트 객체의 멤버 중 이벤트 흐름과 관계된 멤버<br />
+      cancelablc : 디폴트 취소 가능 여부 <br />
+      stopPropagation() : 객체에 등록된 리스너를 모두 실행 후 이벤트 흐름 중단
+      <br />
+      stopImmediatePropagation() : 현재 리스너만 실행하고 이벤트 흐름 즉각
+      중단<br />
+    </p>
+
+    <p>
+      마우스 핸들링<br />
+      마우스 객체 관련 프로퍼티 <br />
+      x,y : x,y는 타겟 객체의 부모 객체 내에서의 마우스 좌표<br />
+      clientX, clientY : 브라우저 윈도우의 문서출력 영역 내에서의 마우스 좌표<br />
+      screenX, screenY : 스크린을 기준으로 한 마우스 좌표<br />
+      offsetX, offsetY : 타겟 객체 내에서의 마우스 좌표<br />
+      button : 눌러진 마우스 버튼 종류 0: 아무것도 안눌린 상태, 1: 왼쪽 버튼, 2:
+      오른쪽버튼, 3:모두, 4:중간버튼<br />
+      wheelDelta : 휠이 구른 방향, 양수:위쪽으로 굴림, 음수 : 아래쪽으로 굴림<br />
+    </p>
+
+    <p>
+      키보드 이벤트 객체 프로퍼티 <br />
+      code: 눌려진 키의 이름 <br />
+      key <br />
+      altKey <br />
+      ctrlKey <br />
+      shiftKey <br />
+      keyCode <br />
+    </p>
+
+    <!-- <table id="exam7">
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table> -->
+    <br>
 
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     <span id="bottom"></span>

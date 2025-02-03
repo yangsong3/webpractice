@@ -219,7 +219,7 @@ todolist.addEventListener("click", (event) => {
 //     dicei.src = diceimg[rn];
 //     dice.appendChild(dicei);
 //     dicebox.appendChild(dice);
-    
+
 //     console.log(dicebox);
 //     console.log(dicebox.lastChild);
 //     if (prev == rn) {
@@ -235,6 +235,55 @@ todolist.addEventListener("click", (event) => {
 //   }
 // });
 
+// let box = document.getElementById("eventprac");
 
+// document.body.addEventListener("keydown", (event) => {
+//   box.innerText += event.key;
+//   console.log(event.key);
+// });
+
+// function cap(){
+//   console.log(1);
+// }
+// function bub() {
+//   console.log(2);
+// }
+
+// let bt1 = document.getElementById("bt1");
+// bt1.addEventListener("click", cap, true);
+// bt1.addEventListener("click", bub, false);
+
+// let tds;
+// let prevIndex=0;
+// let index=0;
+
+// window.onload = function() {
+//   tds = document.getElementsByTagName("td");
+//   tds[index].style.backgroundColor = "orchid";
+// }
+
+// window.onkeydown = function(e) {
+//   switch(e.key) {
+//     case "ArrowDown":
+//       if(index/3>=2) return;
+//       index +=3;
+//       break;
+//     case "ArrowUp":
+//       if(index/3<1) return;
+//       index -=3;
+//       break;
+//     case "ArrowLeft":
+//       if(index%3==0) return;
+//       index --;
+//       break;
+//     case "ArrowRight":
+//     if(index%3==2) return;
+//     index ++;
+//     break;
+//   }
+//   tds[index].style.backgroundColor='orchid';
+//   tds[prevIndex].style.backgroundColor = 'white';
+//   prevIndex=index;
+// }
 
 console.log("script 실행 완료");

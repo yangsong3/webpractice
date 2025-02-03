@@ -42,3 +42,11 @@ p {
 #dice_box li {
     display: inline-block;
 }
+
+
+td{
+  width: 80px;
+  height: 80px;
+  border: 1px solid white;
+  
+}
