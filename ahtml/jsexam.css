@@ -50,3 +50,29 @@ td{
   border: 1px solid white;
   
 }
+
+a {
+  color: white;
+}
+
+a:hover { 
+  color: lightgreen;
+}
+
+#interval {
+  width: 320px;
+  height: 50px;
+  background-color: lightgray;
+  color: black;
+}
+
+#interval div {
+  display: inline-block;
+}
+
+.interbtn {
+  text-align: center;
+  width: 50px;
+  background-color: black;
+  color: white;
+}

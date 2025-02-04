@@ -286,4 +286,59 @@ todolist.addEventListener("click", (event) => {
 //   prevIndex=index;
 // }
 
+// let newWin = null;
+// function load(URL) {
+//   newWin = window.open(URL, "_blank", "left=300,top=300,width=300,height=300");
+// }
+
+// function closeNewWindow() {
+//   if (newWin==null||newWin.closed) {
+//     return;
+//   } else {
+//     newWin.close();
+//   }
+// }
+
+// // on버튼 클릭시 2초마다 배경 r g b 순으로 바뀜 , off버튼 클릭시 작동멈춤.
+// const colors = [
+//   "red", "blue", "green"
+// ];
+
+// let index = 0;
+
+// let btn1 = document.getElementById("btn1");
+// let btn2 = document.getElementById("btn2");
+// let interp = document.getElementById("inp");
+
+// function changecolor(){
+//   interp.style.backgroundColor=colors[index];
+//   index++;
+//   if (index>=colors.length) {
+//     index = 0;
+//   }
+// }
+
+// btn1.onclick= () => {
+//   interval = setInterval('changecolor()',1000);
+// }
+
+// btn2.onclick= () => {
+//   clearInterval(interval);
+// }
+
+// html div #exam9
+// let span = document.getElementById("exam9span1");
+// let interITV = setInterval("dort()", 200);
+// span.onclick = function (e) {
+//   clearInterval(interITV);
+// };
+
+// function dort() {
+//   let str = span.innerHTML;
+//   let firstChar = str.substr(0, 1);
+//   let remains = str.substr(1, str.length - 1);
+//   str = remains + firstChar;
+//   span.innerHTML = str;
+// }
+
 console.log("script 실행 완료");

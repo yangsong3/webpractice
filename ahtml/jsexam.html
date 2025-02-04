@@ -30,13 +30,13 @@
     <p>3. 외부 js 파일에 작성</p>
     <p>4. URL부분에 작성</p>
 
-    <img
+    <!-- <img
       src="/Slimes/slime_idle1.png"
       alt="image"
       onclick="this.src='/Slimes/slime_hit.png'"
       width="150px"
       height="200px"
-    />
+    /> -->
     <p>
       HTML 태그의 이벤트리스너 속성에 직접 JS를 작성하는 방식은 아주 간단한
       코드일 때 사용
@@ -148,7 +148,9 @@
       1. 코어객체 : Array/Date/String/Math 코어객체 생성시 new키워드 사용<br />
 
       2. DOM객체<br />
-      3. BOM객체<br />
+
+      3. BOM객체 : browser object model 객체 ( w3c의 규격이 아님 )<br />
+
       4. window객체<br /><br />
 
       객체에 대한 접근 : . 을 찍어서 접근 <br />
@@ -415,8 +417,9 @@
       1. HTML태그에 작성 => onclick="function()" <br />
       2. DOM객체의 이벤트리스너 프로퍼티에 작성<br />
       let pp = document.getElementById("pp"); // DOM 객체화 function x() {}; //
-      함수 선언 pp.onmouseover = x; // DOM객체의 이벤트리스너 프로퍼티에 함수를
-      등록 3. DOM객체의 addEventListener() 메서드로 등록<br />
+      함수 선언<br />
+      pp.onmouseover = x; // DOM객체의 이벤트리스너 프로퍼티에 함수를 등록<br />
+      3. DOM객체의 addEventListener() 메서드로 등록<br />
       addEventListener(eventName, listener[,useCapture]) 함수의 매개변수<br />
       eventName : 이벤트 타입을 나타내는 문자열 click, load, keydown 등<br />
       listener : 이벤트 리스너로 등록할 함수 이름<br />
@@ -553,7 +556,145 @@
         <td></td>
       </tr>
     </table> -->
-    <br>
+    <br />
+
+    <p>
+      BOM은 윈도우와 윈도우에 로드된 문서의 url, 브라우저가 출력된 스크린 장치,
+      브라우저의 종류와 기능 등 브라우저와 브라우저가 실행하고 있는 환경을
+      자바스크립트 코드로 접근하기 위해 객체화 하는것.<br />
+      BOM에 속한 객체들은 HTML페이지의 내용과 관계 없는 순수 브라우저 관련
+      객체들이다. <br />
+    </p>
+
+    <p>
+      BOM의 종류 <br />
+      window location history screen
+    </p>
+
+    <p>
+      window 객체는 열려 있는 브라우저 윈도우나 탭 윈도우를 나타내는 객체로
+      윈도우마다 하나의 window 객체가 생성 <br />
+      window 객체가 생성되는 경우 3가지 <br />
+      브라우저가 새로운 웹 페이지를 로드할 때 <br />
+      iframe 하나당 하나의 window 객체이다 <br />
+      개발자가 js코드를 통해 직접 window 객체를 임의로 생성하는 경우 ex)
+      window.open("url",'윈도우명','속성') <br />
+    </p>
+
+    <p>
+      window객체의 프로퍼티와 컬렉션, 메서드 목록 <br />
+
+      <b> 프로퍼티와 컬렉션 </b><br />
+      window : 현재 윈도우 객체에 대한 ref <br />
+      document : 윈도우에 담긴 document 객체에 대한 ref <br />
+      history : 히스토리 객체 <br />
+      menubar : 메뉴바 객체 <br />
+      locationbar : 위치바 객체 <br />
+      length : 윈도우에 존재하는 iframe 수 <br />
+      frames : 윈도우에 존재하는 iframe 객체들의 컬렉션 <br />
+      innerWidth : 수직 스크롤바를 포함한 브라우저 내 HTML 문서가 출력되는
+      영역의 폭 <br />
+      innerHeight : 수평 스크롤바를 포함한 브라우저 내 HTML 문서가 출력되는
+      영역의 높이 <br />
+      outerWidth : 윈도우 전체의 폭 <br />
+      outerHeight : 윈도우 전체 높이 <br />
+      screenX : 스크린상 윈도우 x좌표 <br />
+      screenY : 스크린상 윈도우 y좌표 <br />
+      scrollX : 현재 문서의 스크롤 x 값 <br />
+      scrollY : 현재 문서의 스크롤 y 값 <br />
+      <br />
+      <b>메서드</b><br />
+      open() : 새 윈도우 오픈 <br />
+      close() : 윈도우 닫기 <br />
+      focus() : 윈도우에 포커스를 줘서 키보드 입력 가능 상태로 만듬 <br />
+      blur() : 윈도우가 포커스 잃음 <br />
+      stop() : HTML 페이지 로딩 중단 ( 브라우저의 stop버튼 누른 것 동일) <br />
+      alert() : 경고 다이얼로그 출력 <br />
+      confirm() : 확인 다이얼로그 <br />
+      prompt() : 입력 다이얼로그 <br />
+      setInterval() : 타임아웃 코드가 반복 호출되도록 타이머 설정 <br />
+      clearInterval() : 설정된 타이머 제거 <br />
+      setTimeout() : 타임아웃 단발성 타이머 설정 <br />
+      clearTimeout() : 단발성 타이머 제거 <br />
+      moveBy() : 지정된 픽셀만큼 윈도우 이동 <br />
+      moveTo() : 지정된 위치로 윈도우 이동 <br />
+      resizeBy() : 지정된 크기만큼 윈도우 크기 조절 <br />
+      resizeTo() : 지정된 크기로 윈도우 크기 조절 <br />
+      scrollBy() : 주어진 픽셀만큼 상하좌우 스크롤한다 <br />
+      scrollTo() : 특정 좌표로 스크롤한다 <br />
+    </p>
+    <p>
+      window 객체에도 이벤트리스너를 등록할 수 있다. <br />
+      window.open("url","윈도우명","속성"); <br />
+      url : 페이지의 주소, 이 매개변수는 필수, null 허용 x <br /><br />
+      윈도우명 : 새로 여는 윈도우의 이름 전달 매개변수 <br />
+      _blank : 이름 없는 새 윈도우 <br />
+      _parent : 새 윈도우를 열지 않고 현재 윈도우의 부모 윈도우에 웹 페이지 출력
+      <br />
+      _self : 현재 윈도우에 페이지 출력 <br />
+      _top : 브라우저 윈도우에 웹 페이지 출력 <br />
+      <br />
+      속성 : 윈도우의 모양이나 크기 등 속성을 설정하는 부분 ex) "resizable=yes"
+      , "resizable=1"<br />
+      width/height/left/top/locationbar/menubar/scrollbar/status 등 <br />
+    </p>
+
+    <!-- <a href="javascript:load('https://www.naver.com')">새 윈도우 열기</a>
+    <a href="javascript:window.close()">윈도우 닫기</a>
+    <a href="javascript:closeNewWindow()">새 윈도우 닫기</a> -->
+
+    <p>
+      window 의 타이머 활용 <br />
+      window에는 타이머 작동 메서드가 있어 이를 활용하여 시간에 따라 웹 페이지에
+      동적인 효과를 줄 수 있음. <br />
+      단발성 -> setTimeout() : 메서드에 밀리초 단위 타임아웃 지연 시간과
+      타임아웃 코드를 작성한다. <br />
+      단발성이기에 수동으로 clearTimeout으로 끄는 경우가 적음 <br />
+      반복성 -> setInterval() : <br />
+      무한 반복이기에 clearInterval 함수로 꺼줘야 함. <br />
+    </p>
+
+    <div id="interval">
+      <div id="inp">
+        <p>javascript setInterval practice</p>
+      </div>
+      <div id="btn1" class="interbtn">on</div>
+      <div id="btn2" class="interbtn">off</div>
+    </div>
+    <br />
+
+    <div id="exam9">
+      <span id="exam9span1"> 3.14159265358979 </span>
+    </div>
+    <br />
+
+    <p>
+      location 객체 <br />
+      접근법 : window.location , location 만 써도 됨.(윈도우 생략가능)<br />
+      location 객체는 윈도우에 로드된 웹페이지 url 정보를 나타내는 객체 <br />
+      윈도우가 열릴 때 자동 생성 됨. <br />
+      <br />
+      url예시 : https://www.asdasd.com:8080/content/abc.html#label1 <br /><br />
+      https: 프로토콜 <br />
+      www.asdasd.com : 호스트 네임 <br />
+      8080 : 포트번호 <br />
+      content/abc.html : path (경로) <br />
+      #label1 : 해시 (#을 포함하는 앵커 이름 문자열) <br />
+    </p>
+
+    <p>
+      history 객체 <br />
+      히스토리 객체는 사용자가 방문한 웹 페이지의 리스트 정보를 담고 있는 객체
+      <br />
+      접근 : window.history <br /><br />
+
+      history 관련 프로퍼티와 메서드 <br />
+      length : 히스토리 리스트에 있는 엔트리 수 <br />
+      back() : 히스토리에 있는 이전 웹 페이지로 이동하는 메서드. 브라우저의 뒤로
+      버튼과 동일 <br />
+      forward() : back의 반대 <br>
+      go(n) : 히스토리에서 현재 웹페이지에서 n만큼 상대적인 위치에 있는 웹페이지로 이동 <br>
+    </p>
 
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
     <span id="bottom"></span>
