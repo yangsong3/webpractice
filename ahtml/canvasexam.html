@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>canvas example</title>
+    <style>
+      body {
+        background-color: rgb(36, 36, 36);
+        color: white;
+      }
+
+      canvas {
+        width: 300px;
+        height: 300px;
+        background-color: lightgray;
+        color: black;
+      }
+      #button {
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        padding: 1%;
+        margin: 1%;
+        background-color: white;
+        color: black;
+        border-radius: 5%;
+      }
+      #button a {
+        color: black;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="button"><a href="#bottom">맨아래로</a></div>
+    <p>
+      canvas 는 웹 페이지 그래픽 표현 방법 <br />
+      이미지 태그를 출력 할 때는 img태그를 이용하고 그래픽 애니메이션이나 사용자
+      그래픽이 필요한 경우 canvas 활용 <br />
+      캔버스의 그래픽 기능을 이용하여 선, 원, 곡선, 사각형 이미지, 2차원 문자 등
+      자유롭게 그려낼 수 있음. <br />
+      실시간 그래프, 애니메이션, 지도, 게임 등을 간단하게 플러그인 없이 구현
+      가능하다. <br />
+      캔버스에 그래픽 그리기는 js코드로만 가능하다 <br />
+
+      getContext('2d')가 리턴한 context객체는 2차원 그래픽에 사용되는 프로퍼티와
+      메서드 제공 <br />
+      리턴받은 객체 : CanvasRenderingContext2D 타입의 객체임 <br />
+      HTML5의 캔버스는 비트맵 렌더링 엔진을 장착하여 브라우저에 즉시 그려내는
+      구조 <br />
+      속도가 빠름 <br />
+    </p>
+    <p>
+      canvas객체의 프로퍼티와 메서드 <br />
+      width <br />
+      height <br />
+      style <br />
+      getContext() <br /><br />
+      context 객체의 프로퍼티 메서드<br />
+      strokeStyle : 선 색상 <br />
+      fillStyle : 채우기 색상 <br />
+      lineWidth : 선 두께 <br />
+      font : 텍스트 폰트 <br />
+      textAlign : 텍스트 정렬 <br />
+      <br />
+      beginPath() : 이전 경로 모두 지우고 새로운 경로 시작 <br />
+      closePath() : 경로의 끝 점 과 시작점을 연결하는 선을 추가하고 경로 닫음.
+      <br />
+      moveTo() : 경로에 새 점을 만듦 <br />
+      lineTo() : 경로의 끝 점과 연결하는 선을 추가한다 <br />
+      rect() : 사각형 그리기 <br />
+      arc() : 원호 그리기 <br />
+      fill() : 경로에 만들어진 도형을 외곽선 없이 내부 색을 채워 그린다 <br />
+      stroke() : 경로에 담겨진 모든 도형을 외곽선만 캔버스에 그린다. <br />
+      clearRect() : 캔버스에서 사각형 영역을 지운다. <br />
+      fillRect() : 캔버스에 외곽선 없이 사각형 영역을 색으로 바로 칠한다 <br />
+      strokeRect() : 사각형을 경로에 추가하지 않고 캔버스에 바로 그림 <br />
+      strokeText() : 텍스트를 캔버스에 바로 그린다 <br />
+      drawImage() : 이미지를 캔버스에 바로 그린다 <br />
+    </p>
+    <canvas id="canvas1"></canvas>
+
+    <span id="bottom"></span>
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    <script src="canvasexam.js"></script>
+  </body>
+</html>
