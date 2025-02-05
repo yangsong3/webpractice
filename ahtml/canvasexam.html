@@ -4,33 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>canvas example</title>
-    <style>
-      body {
-        background-color: rgb(36, 36, 36);
-        color: white;
-      }
-
-      canvas {
-        width: 300px;
-        height: 300px;
-        background-color: lightgray;
-        color: black;
-      }
-      #button {
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        padding: 1%;
-        margin: 1%;
-        background-color: white;
-        color: black;
-        border-radius: 5%;
-      }
-      #button a {
-        color: black;
-        text-decoration: none;
-      }
-    </style>
+    <link rel="stylesheet" href="canvasexam.css">
+    
   </head>
   <body>
     <div id="button"><a href="#bottom">맨아래로</a></div>
@@ -79,7 +54,52 @@
       strokeText() : 텍스트를 캔버스에 바로 그린다 <br />
       drawImage() : 이미지를 캔버스에 바로 그린다 <br />
     </p>
-    <canvas id="canvas1"></canvas>
+    <canvas width="300px" height="300px" id="canvas1"></canvas>
+		<canvas width="300px" height="300px" id="canvas2"></canvas>
+
+		<p>
+			도형 그리기 <br>
+			Path 만들기 <br>
+			캔버스에 담긴 경로를 그려내기 <br>
+
+			path란 캔버스 위에 펜이 지나가는 길 <br>
+			경로 만들기는 캔버스에 그리고자 하는 도형들을 먼저 컨텍스트 내의 경로에 담는 과정이다. <br>
+			moveTo(), lineTo(), rect(), arc() 등 메서드는 캔버스에 직접 그리지 않고 도형을 경로에 추가하는 메서드이다 <br>
+			stroke 나 fill 메서드가 호출 될때, 실질적으로 경로에서 그림으로 캔버스에 올라옴 <br>
+			closePath : 경로 종료 <br>
+		</p>
+		<canvas width="200px" height="200px" id="canvas3"></canvas>
+		<canvas width="200px" height="200px" id="canvas4"></canvas>
+
+		<p>
+			이미지 객체의 생성 <br>
+			캔버스에 이미지를 그리기 위해서는 이미지를 담을 이미지 객체가 필요함. <br>
+			이미지 객체는 JS 코드로 new 키워드 사용해서 만듦 <br>
+			let img = new Image();
+		</p>
+		<p>
+			이미지의 로딩과 onload <br>
+			이미지 파일로부터 이미지를 로딩 시키기 위해서는 Image 객체의 src 프로퍼티 이용<br>
+			순서 중요 <br>
+			img.onload = function() {} // img 객체에 로드된 이미지를 그리는 코드 <br>
+			img.src=""; // img 객체에 이미지 로딩 시작 <br><br>
+			이미지 로딩이 완료되어야 이미지를 그릴 수 있기 때문에, 이미지 로딩을 지시하기 전
+			img.onload 리스너에 이미지가 로딩 되었을 때 이미지를 그리는 JS 코드를 쓴다. <br>
+		</p>
+		<p>
+			이미지 그리기 <br>
+			이미지 로딩이 완료되면 컨텍스트 객체의 drawImage() 메서드를 이용하여 이미지를 그린다. <br>
+			drawImage(img, dx, dy); // img 객체, 그릴 캔버스 좌표 (x , y), 이미지 사이즈 width, height <br>
+		</p>
+		<canvas width="200px" height="200px" id="canvas5"></canvas>
+
+    <div id="draw">
+		  <canvas width="500px" height="500px" id="canvas6"></canvas>
+      <ul class="toolbox">
+        <li class="tools"><input id="colors" type="color"></li>
+        <li class="tools"><div><input id="size" type="range"><p id="sizedisplay">size</p></div></li>
+      </ul>
+    </div>
 
     <span id="bottom"></span>
     <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
