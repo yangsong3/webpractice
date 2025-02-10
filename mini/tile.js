@@ -6,9 +6,6 @@ export class Tile {
     this.posx = posx; // 타일의 중심 x 좌표
     this.posy = posy; // 타일의 중심 y 좌표
     this.road = false; // 타일이 길인지
-    this.tower = false; // 타일에 타워가 있는지
-    this.towerimg; // 타워 이미지
-    this.monster = false; // 타일에 몬스터가 있는지
   }
 
   draw(ctx) {
@@ -48,16 +45,22 @@ export function setTiles() {
   }
 }
 
-// 길 타일 설정
+// 길 타일번호
 export const roadTiles = [
   10, 11, 21, 31, 41, 42, 43, 44, 45, 35, 25, 15, 16, 17, 18, 28, 38, 39,
 ];
 
+// 길 타일 설정
 export function setRoadTiles() {
   for (let i = 0; i < roadTiles.length; i++) {
     tiles[roadTiles[i]].road = true;
   }
 }
+
+// 몬스터 방향 변경지점
+export const monsterPath = [
+  11,41,45,15,18,38,39
+]
 
 // 타일에 타워 설치시
 export function setTileTower(tile) {
