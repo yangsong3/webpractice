@@ -158,7 +158,7 @@ class Tower {
   drawRange(bctx) {
     bctx.beginPath();
     bctx.arc(this.x, this.y, Tower.attackRange, 0, Math.PI * 2);
-    bctx.fillStyle = "rgba(0,0,255,0.2)";
+    bctx.fillStyle = "rgba(0,0,255,0.1)";
     bctx.fill();
     bctx.closePath();
   }
@@ -311,6 +311,7 @@ class Monster {
       // clearInterval(gameFrameInterval);
       // gameFrameLoop = false;
       Status.waveUpdate((Status.wave += 1));
+      console.log("monster 0");
     }
   }
 }
@@ -462,9 +463,30 @@ for (let i = 0; i < towerClass.length; i++) {
         Status.goldUpdate((Status.gold -= e.target.alt));
         console.log("구매성공, 남은 골드 :", Status.gold);
 
+        //ks//
+        
+        img = new Image();
+        img.width = Tower.towerSize;
+        img.height = Tower.towerSize;
+        img.src = e.target.src;
+        img.style.position = "absolute";
+
+        moveImageListener = function(event) {
+          document.body.appendChild(img);
+          img.style.left = event.clientX + 10 +'px';
+          img.style.top = event.clientY - 100 +'px';
+        };
+        document.addEventListener('mousemove', moveImageListener);
+        
+        //ks//
+
         bcvs.addEventListener(
           "click",
           function placeTower(event) {
+            //ks//
+            document.removeEventListener('mousemove', moveImageListener);
+            document.body.removeChild(img);
+            //ks//
             if (hasItem) {
               for (let i = 0; i < Tile.tiles.length; i++) {
                 if (
@@ -495,6 +517,9 @@ for (let i = 0; i < towerClass.length; i++) {
                     return;
                   } else {
                     console.log("타워 설치 불가");
+                    hasItem = false;
+                    Status.goldUpdate(Status.gold += parseInt(e.target.alt));
+                    console.log(hasItem, Status.gold);
                   }
                 }
               }
@@ -516,15 +541,10 @@ function drawState() {
   Tile.drawMap(bctx);
   Tower.towers.forEach((tower) => tower.draw(bctx));
   // console.log("drawState");
-
-  // 캔버스 픽셀 데이터 확인
-  // let pixels = bctx.getImageData(0, 0, canvas.width, canvas.height).data;
-  // console.log("drawState 후 픽셀 데이터:", pixels.slice(0, 100));
 }
 
 // 게임진행 프레임 그리기
 function drawFrame() {
-  drawState();
   Tower.updateTowers();
   Projectile.updateProjectiles(bctx);
   Monster.monsterFrame(bctx);
@@ -534,15 +554,20 @@ function drawFrame() {
   if (Monster.monsters.length === 0) {
     stopGameFrameLoop();
   }
+
+  drawState();
 }
 
 function stopGameFrameLoop() {
   if (gameFrameLoop) {
     clearInterval(gameFrameInterval);
     gameFrameLoop = false;
-    drawState();
+    // drawState();
 
     console.log("stopGameFrameLoop");
+    interval = setTimeout(()=>{
+      Tower.towers.forEach((tower)=>tower.draw(bctx));
+    }, 1);
   }
 }
 
@@ -553,8 +578,13 @@ function init() {
   drawState();
   console.log("init");
 }
+let interval;
 
-init();
+let isStart = false;
+if (!isStart) {
+  init();
+  isStart = true;
+}
 
 // 캔버스 루프 작동 여부
 let gameFrameLoop = false;
@@ -578,5 +608,7 @@ startBtn.addEventListener("click", () => {
       Status.checkLife();
       drawFrame();
     }, 1000 / 244);
+  } else {
+    drawState();
   }
 });
