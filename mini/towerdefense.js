@@ -109,21 +109,31 @@ class Tile {
 class Tower {
   static towers = [];
   static towerSize = 90;
-  static attackRange = 150; // 사거리
+  // static attackRange = 150; // 사거리
 
-  constructor(towerImage, x, y, speed) {
+
+  // constructor(towerImage, x, y, speed, damage, range, projType)
+  constructor(towerImage, x, y, speed, damage, range) {
     this.towerImage = towerImage;
     this.x = x;
     this.y = y;
     this.target = null;
     this.speed = speed;
     this.image = towerImage;
+
+    // 속성 추가
+    this.range = range;
+    this.damage = damage;
+
+    // this.projType = projType;
+
   }
 
   findTarget() {
     let inRangeMonsters = Monster.monsters.filter((monster) => {
       let distance = Math.hypot(this.x - monster.x, this.y - monster.y);
-      return distance <= Tower.attackRange;
+      // return distance <= Tower.attackRange;
+      return distance <= this.range;
     });
 
     if (inRangeMonsters.length > 0) {
@@ -138,7 +148,8 @@ class Tower {
   shoot() {
     if (this.target) {
       Projectile.projectiles.push(
-        new Projectile(this.x, this.y, this.target, 20)
+        new Projectile(this.x, this.y, this.target, 20, this.damage)
+        // new Projectile(this.x, this.y, this.target, 20, this.damage, this.projType)
       );
     }
   }
@@ -157,7 +168,7 @@ class Tower {
 
   drawRange(bctx) {
     bctx.beginPath();
-    bctx.arc(this.x, this.y, Tower.attackRange, 0, Math.PI * 2);
+    bctx.arc(this.x, this.y, this.range, 0, Math.PI * 2);
     bctx.fillStyle = "rgba(0,0,255,0.1)";
     bctx.fill();
     bctx.closePath();
@@ -169,6 +180,71 @@ class Tower {
       if (tower.target) {
         tower.shoot();
       }
+    });
+  }
+}
+
+class Projectile {
+  static projectiles = [];
+  static projectileImgs = {1:"http:~~~~ ", 2:"~~~~~"};
+
+  // x, y target, speed, damage, projType
+  constructor(x, y, target, speed, damage) {
+    this.x = x;
+    this.y = y;
+    this.speed = speed;
+    this.target = target;
+    this.damage = damage;
+
+    // this.img = projType;
+  }
+
+  move() {
+    if (!this.target) return;
+
+    let dx = this.target.x - this.x;
+    let dy = this.target.y - this.y;
+    let distance = Math.hypot(dx, dy);
+
+    if (distance < this.speed) {
+      this.hitTarget();
+      return;
+    }
+
+    this.x += (dx / distance) * this.speed;
+    this.y += (dy / distance) * this.speed;
+  }
+
+  hitTarget() {
+    if (this.target) {
+      this.target.hp -= this.damage;
+
+      if (this.target.hp <= 0) {
+        this.removeMonster(this.target);
+      }
+    }
+    Projectile.projectiles.splice(Projectile.projectiles.indexOf(this), 1);
+  }
+
+  removeMonster(monster) {
+    let index = Monster.monsters.indexOf(monster);
+    if (index !== -1) {
+      Monster.monsters.splice(index, 1);
+      Status.goldUpdate((Status.gold += 10));
+    }
+  }
+
+  draw(bctx) {
+    bctx.fillStyle = "blue";
+    bctx.beginPath();
+    bctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
+    bctx.fill();
+  }
+
+  static updateProjectiles(bctx) {
+    Projectile.projectiles.forEach((p) => {
+      p.move();
+      p.draw(bctx);
     });
   }
 }
@@ -190,7 +266,7 @@ class Monster {
   };
   static monsters = [];
   static imgSrc =
-    "https://png.pngtree.com/png-clipart/20190618/original/pngtree-anime-character-campus-game-character-anime-comic-hand-drawn-png-image_3923580.jpg";
+   "https://png.pngtree.com/png-clipart/20220824/ourmid/pngtree-monster-merah-png-image_6121764.png";
 
   constructor(x, y, hp, speed) {
     this.image = new Image();
@@ -207,7 +283,7 @@ class Monster {
     this.pathIndex = 0;
     this.isMoving = false;
   }
-
+  // lee
   move() {
     if (this.pathIndex >= Monster.path.length) {
       const monsterIndex = Monster.monsters.indexOf(this);
@@ -273,6 +349,7 @@ class Monster {
     }
   }
 
+  // lee
   static monsterFrame(bctx) {
     if (!gameFrameLoop) return;
 
@@ -313,66 +390,6 @@ class Monster {
       Status.waveUpdate((Status.wave += 1));
       console.log("monster 0");
     }
-  }
-}
-
-class Projectile {
-  static projectiles = [];
-
-  constructor(x, y, target, speed) {
-    this.x = x;
-    this.y = y;
-    this.speed = speed;
-    this.target = target;
-  }
-
-  move() {
-    if (!this.target) return;
-
-    let dx = this.target.x - this.x;
-    let dy = this.target.y - this.y;
-    let distance = Math.hypot(dx, dy);
-
-    if (distance < this.speed) {
-      this.hitTarget();
-      return;
-    }
-
-    this.x += (dx / distance) * this.speed;
-    this.y += (dy / distance) * this.speed;
-  }
-
-  hitTarget() {
-    if (this.target) {
-      this.target.hp -= 1;
-
-      if (this.target.hp <= 0) {
-        this.removeMonster(this.target);
-      }
-    }
-    Projectile.projectiles.splice(Projectile.projectiles.indexOf(this), 1);
-  }
-
-  removeMonster(monster) {
-    let index = Monster.monsters.indexOf(monster);
-    if (index !== -1) {
-      Monster.monsters.splice(index, 1);
-      Status.goldUpdate((Status.gold += 10));
-    }
-  }
-
-  draw(bctx) {
-    bctx.fillStyle = "blue";
-    bctx.beginPath();
-    bctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
-    bctx.fill();
-  }
-
-  static updateProjectiles(bctx) {
-    Projectile.projectiles.forEach((p) => {
-      p.move();
-      p.draw(bctx);
-    });
   }
 }
 
@@ -457,10 +474,10 @@ for (let i = 0; i < towerClass.length; i++) {
     if (hasItem) return; // 구입된 상태에서 중복 구매되는거 방지
 
     if (Array.from(document.querySelectorAll(".itemimg")).includes(e.target)) {
-      if (Status.gold >= e.target.alt) {
+      if (Status.gold >= e.target.alt.split(";")[0]) {
         selectedImgSrc = e.target.src; // 선택한 이미지 저장
         hasItem = true;
-        Status.goldUpdate((Status.gold -= e.target.alt));
+        Status.goldUpdate((Status.gold -= parseInt(e.target.alt.split(";")[0])));
         console.log("구매성공, 남은 골드 :", Status.gold);
 
         //ks//
@@ -505,7 +522,9 @@ for (let i = 0; i < towerClass.length; i++) {
                       img,
                       Tile.tiles[i].midX,
                       Tile.tiles[i].midY,
-                      5
+                      5,
+                      parseInt(e.target.alt.split(";")[1]),
+                      parseInt(e.target.alt.split(";")[2])
                     );
                     tower.draw(bctx);
                     Tower.towers.push(tower);
@@ -514,11 +533,12 @@ for (let i = 0; i < towerClass.length; i++) {
 
                     bcvs.removeEventListener("click", placeTower);
                     console.log("타워 설치");
+                    console.log(Tower.towers);
                     return;
                   } else {
                     console.log("타워 설치 불가");
                     hasItem = false;
-                    Status.goldUpdate(Status.gold += parseInt(e.target.alt));
+                    Status.goldUpdate(Status.gold += parseInt(e.target.alt.split(";")[0]));
                     console.log(hasItem, Status.gold);
                   }
                 }
