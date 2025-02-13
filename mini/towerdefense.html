@@ -480,40 +480,6 @@
         </div>
       </div>
     </div>
-
-    <script>
-      function startPage() {
-        document.getElementById("startPage").style.display = "none"; // 게임 시작 후 첫 페이지 숨기기
-        document.getElementById("gameframe").style.display = "block"; // 게임 화면 표시하기
-      }
-
-      function difficultyPage() {
-        document.getElementById("startPage").style.display = "none"; // 첫 번째 페이지 숨기기
-        document.getElementById("setframe").style.display = "block"; // 난이도 설정 페이지 표시하기
-      }
-
-      function backPage() {
-        document.getElementById("startPage").style.display = "block"; // 첫 번째 페이지 다시 표시
-        document.getElementById("setframe").style.display = "none"; // 난이도 설정 페이지 숨기기
-      }
-
-      function selectDifficulty(level) {
-        console.log("선택한 난이도:", level);
-        document.getElementById("setframe").style.display = "none"; // 게임 시작 후 첫 페이지 숨기기
-        document.getElementById("gameframe").style.display = "block"; // 게임 화면 표시하기
-      }
-
-      function showImage(imageUrl, name, damage, attackSpeed, cost) {
-        const itemInfo = document.getElementById("itemInfo");
-        itemInfo.innerHTML = `
-            <img src="${imageUrl}" width="140" height="60">
-            <p>이름: ${name}</p>
-            <p>데미지: ${damage}</p>
-            <p>공격속도 및 범위: ${attackSpeed}</p>
-            <p>필요골드: ${cost}</p>
-        `;
-      }
-    </script>
     <script src="towerdefense.js"></script>
   </body>
 </html>
