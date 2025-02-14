@@ -20,13 +20,13 @@ function selectDifficulty(level) {
   document.getElementById("gameframe").style.display = "block"; // 게임 화면 표시하기
 }
 
-function showImage(imageUrl, name, damage, attackSpeed, cost) {
+function showImage(imageUrl, name, damage, range, cooldown, cost) {
   const itemInfo = document.getElementById("itemInfo");
   itemInfo.innerHTML = `
       <img src="${imageUrl}" width="140" height="60">
       <p>이름: ${name}</p>
       <p>데미지: ${damage}</p>
-      <p>공격속도 및 범위: ${attackSpeed}</p>
+      <p>범위: ${cooldown} |공격주기: ${range} </p>
       <p>필요골드: ${cost}</p>
   `;
 }
@@ -37,8 +37,8 @@ class Tile {
   static tileSize = 100;
 
   static tileImage = {
-    road: "https://cdn.pixabay.com/photo/2015/04/18/07/13/rocks-728393_1280.jpg",
-    bg: "https://cdn.pixabay.com/photo/2013/02/21/19/10/grass-84622_1280.jpg",
+    road: "https://opengameart.org/sites/default/files/styles/medium/public/Tiled%20-%20Metal%20or%20Rock_0.png",
+    bg: "https://opengameart.org/sites/default/files/styles/medium/public/grass_26.png",
   };
 
   static tiles = [];
@@ -109,30 +109,43 @@ class Tile {
 class Tower {
   static towers = [];
   static towerSize = 90;
-  // static attackRange = 150; // 사거리
 
-
-  // constructor(towerImage, x, y, speed, damage, range, projType)
-  constructor(towerImage, x, y, speed, damage, range) {
+  constructor(towerImage, x, y, cooldown, damage, range, projImg, gold) {
     this.towerImage = towerImage;
     this.x = x;
     this.y = y;
     this.target = null;
-    this.speed = speed;
     this.image = towerImage;
 
-    // 속성 추가
+    this.gold = gold;
+
+    // 범위 데미지 추가
     this.range = range;
     this.damage = damage;
 
-    // this.projType = projType;
+    // 타워별 투사체 이미지 설정
+    this.projImg = projImg;
 
+    // 공격주기
+    this.cooldown = cooldown; // 쿨타임 기준 값
+    this.coolTime = 0;
   }
 
+  // 몬스터 탐지
   findTarget() {
     let inRangeMonsters = Monster.monsters.filter((monster) => {
+      // 캔버스 안에 몬스터가 있어야 함
+      if (
+        monster.x < 0 ||
+        monster.x > bcvsW ||
+        monster.y < 0 ||
+        monster.y > bcvsH
+      ) {
+        return false;
+      }
+
+      // 사정거리 안에 있는 몬스터만 탐지
       let distance = Math.hypot(this.x - monster.x, this.y - monster.y);
-      // return distance <= Tower.attackRange;
       return distance <= this.range;
     });
 
@@ -145,18 +158,26 @@ class Tower {
     }
   }
 
+  // 공격
   shoot() {
-    if (this.target) {
+    if (this.target && this.coolTime <= 0) {
       Projectile.projectiles.push(
-        new Projectile(this.x, this.y, this.target, 20, this.damage)
-        // new Projectile(this.x, this.y, this.target, 20, this.damage, this.projType)
+        new Projectile(
+          this.x,
+          this.y,
+          this.target,
+          40,
+          this.damage,
+          this.projImg
+        )
       );
+      this.coolTime = this.cooldown;
+      // console.log(this.coolTime, this.cooldown);
     }
   }
 
   draw(bctx) {
     this.drawRange(bctx);
-
     bctx.drawImage(
       this.image,
       this.x - Tower.towerSize / 2,
@@ -166,6 +187,7 @@ class Tower {
     );
   }
 
+  // 타워 공격 범위 이미지로 보여주기
   drawRange(bctx) {
     bctx.beginPath();
     bctx.arc(this.x, this.y, this.range, 0, Math.PI * 2);
@@ -174,10 +196,15 @@ class Tower {
     bctx.closePath();
   }
 
+  // 타워 적 탐지 가동
   static updateTowers() {
     Tower.towers.forEach((tower) => {
       tower.findTarget();
-      if (tower.target) {
+
+      if (tower.coolTime > 0) {
+        tower.coolTime--;
+        // console.log(tower.coolTime);
+      } else {
         tower.shoot();
       }
     });
@@ -186,27 +213,36 @@ class Tower {
 
 class Projectile {
   static projectiles = [];
-  static projectileImgs = {1:"http:~~~~ ", 2:"~~~~~"};
+  static size = 150; //ks
 
-  // x, y target, speed, damage, projType
-  constructor(x, y, target, speed, damage) {
+  // 투사체 별 이미지
+  static projectileImgs = {
+    1: "https://blogger.googleusercontent.com/img/a/AVvXsEhu1q2KwCaBLVuYwE6KxDT6YDdYcgLsM00yQDGRWjbk3jn3qo1zCK97oWIJjW8FW5G_LCHIKkQ6Q5lGyAXu-wIBsaf92vC1TcLmCcCdauWCRbJnAqkdLgE6K4N4aJae3-pwa1q_Wz2-qx0eo-UsAwo5QsN0DQvvMfB3gBIUcKVbSMu00q2HMY-QeA3KYYIj",
+    2: "https://blogger.googleusercontent.com/img/a/AVvXsEhu1q2KwCaBLVuYwE6KxDT6YDdYcgLsM00yQDGRWjbk3jn3qo1zCK97oWIJjW8FW5G_LCHIKkQ6Q5lGyAXu-wIBsaf92vC1TcLmCcCdauWCRbJnAqkdLgE6K4N4aJae3-pwa1q_Wz2-qx0eo-UsAwo5QsN0DQvvMfB3gBIUcKVbSMu00q2HMY-QeA3KYYIj",
+    3: "https://blogger.googleusercontent.com/img/a/AVvXsEgXSOWCbppI2tEhbJk_s25nj32IzKjvL9OQaHeL_oEZmEeiko_eZcOnYGzjD114I6lWs132NrYnEgeiSdMPsEJfzPdcRvyloFuiM8_jbQYHX859mFaHBgeW-3nQlQD4esQIM2pFxNZCGFhN4Z03i-sceB29CigeKOtEkMgyXi5SyCh_Tf0uKREemX1KXqGX",
+    4: "https://blogger.googleusercontent.com/img/a/AVvXsEiUACP2g4PZQB6tXy7InbeesVXJ0VE22Z0QCuEjv46J5vInDpS3uCYAuq6gHSEAJDTpi4jn2LD2NLZLh8UmU4fHfADV12ftY33IX_VV7e5VGW_0_-4K3hKYg-5kccIrAw7J659rMYHj4N4_mvx-MnhG9c64fxYof-kiK145Fvaa8VGn6RfaTz74ls-MBtSJ",
+  };
+
+  constructor(x, y, target, speed, damage, projImg) {
     this.x = x;
     this.y = y;
     this.speed = speed;
     this.target = target;
     this.damage = damage;
-
-    // this.img = projType;
+    this.img = Projectile.projectileImgs[projImg];
   }
 
   move() {
+    // 타겟이 없으면 공격 x
     if (!this.target) return;
 
     let dx = this.target.x - this.x;
     let dy = this.target.y - this.y;
     let distance = Math.hypot(dx, dy);
 
-    if (distance < this.speed) {
+    if (distance <= this.speed) {
+      this.x = this.target.x;
+      this.y = this.target.y;
       this.hitTarget();
       return;
     }
@@ -223,35 +259,54 @@ class Projectile {
         this.removeMonster(this.target);
       }
     }
-    Projectile.projectiles.splice(Projectile.projectiles.indexOf(this), 1);
+    this.removeProjectile(); // 타겟이 없으면 투사체 제거
   }
 
+  // 현재 공격 중인 몬스터 제거
   removeMonster(monster) {
     let index = Monster.monsters.indexOf(monster);
     if (index !== -1) {
       Monster.monsters.splice(index, 1);
-      Status.goldUpdate((Status.gold += 10));
+      Status.goldUpdate((Status.gold += monster.gold));
     }
   }
 
+  // 현재 투사체 제거
+  removeProjectile() {
+    let index = Projectile.projectiles.indexOf(this);
+    if (index !== -1) {
+      Projectile.projectiles.splice(index, 1);
+    }
+  }
+
+  // 투사체 이미지
   draw(bctx) {
-    bctx.fillStyle = "blue";
-    bctx.beginPath();
-    bctx.arc(this.x, this.y, 5, 0, Math.PI * 2);
-    bctx.fill();
+    var img = new Image();
+    img.src = this.img;
+
+    bctx.drawImage(
+      img,
+      this.x - Projectile.size / 2,
+      this.y - Projectile.size / 2,
+      Projectile.size,
+      Projectile.size
+    );
   }
 
   static updateProjectiles(bctx) {
-    Projectile.projectiles.forEach((p) => {
+    for (let i = Projectile.projectiles.length - 1; i >= 0; i--) {
+      let p = Projectile.projectiles[i];
       p.move();
       p.draw(bctx);
-    });
+    }
   }
 }
 
 class Monster {
-  static size = 80;
-  static path = [11, 41, 45, 15, 18, 38, 39];
+  static size = 80; // 이미지 사이즈
+  static path = [11, 41, 45, 15, 18, 38, 39]; // 몬스터 이동 경로
+
+  // 몬스터 웨이브 별 소환되는 마리수
   static monstersbywave = {
     1: 5,
     2: 10,
@@ -264,9 +319,39 @@ class Monster {
     9: 45,
     10: 50,
   };
-  static monsters = [];
+
+  // 웨이브 별 몬스터 이동속도
+  static wavebyspeed = {
+    1: 3,
+    2: Math.round(Math.random() * 3 + 3), //3~6
+    3: Math.round(Math.random() * 5 + 3), //3~8
+    4: Math.round(Math.random() * 7 + 3), //3~10
+    5: Math.round(Math.random() * 9 + 3), //3~12
+    6: Math.round(Math.random() * 11 + 5), //5~16
+    7: Math.round(Math.random() * 12 + 5), //5~18
+    8: Math.round(Math.random() * 13 + 5), //5~15
+    9: Math.round(Math.random() * 14 + 5), //5~22
+    10: Math.round(Math.random() * 10 + 10), //10~20
+  };
+
+  // 웨이브 별 몬스터 체력
+  static wavebyhp = {
+    1: 30,
+    2: 50,
+    3: Math.random() * 10 + 50, //50 ~60
+    4: Math.random() * 20 + 50, //50~70
+    5: Math.random() * 30 + 50, //50~80
+    6: Math.random() * 40 + 50, //50~90
+    7: Math.random() * 50 + 50, //50~100
+    8: Math.random() * 60 + 50, //50~110
+    9: Math.random() * 80 + 50, //50~120
+    10: Math.random() * 105 + 70, //70~150
+  };
+  static monsters = []; // 생성된 몬스터
+
+  // 몬스터 이미지
   static imgSrc =
-   "https://png.pngtree.com/png-clipart/20220824/ourmid/pngtree-monster-merah-png-image_6121764.png";
+    "https://png.pngtree.com/png-clipart/20220824/ourmid/pngtree-monster-merah-png-image_6121764.png";
 
   constructor(x, y, hp, speed) {
     this.image = new Image();
@@ -282,8 +367,23 @@ class Monster {
     this.speed = speed;
     this.pathIndex = 0;
     this.isMoving = false;
+
+    // 몬스터 별 골드 설정
+    if (this.speed <= 5) {
+      this.gold = 5;
+      if (this.hp > 100) {
+        this.gold = 10;
+      }
+    } else if (5 < this.speed && this.speed <= 15) {
+      this.gold = 10;
+      if (this.hp > 100) {
+        this.gold = 15;
+      }
+    } else {
+      this.gold = 10;
+    }
   }
-  // lee
+
   move() {
     if (this.pathIndex >= Monster.path.length) {
       const monsterIndex = Monster.monsters.indexOf(this);
@@ -340,16 +440,17 @@ class Monster {
     }
   }
 
-  static setMonsters(amount, hp, x, y) {
+  // 몬스터 생성
+  static setMonsters(amount, x, y, hp, speed) {
     if (!gameFrameLoop) {
       for (let i = 0; i < amount; i++) {
-        let monster = new Monster(x, y, hp, 5);
+        let monster = new Monster(x, y, hp, speed);
         Monster.monsters.push(monster);
       }
     }
   }
 
-  // lee
+  // 몬스터 순차적 출발
   static monsterFrame(bctx) {
     if (!gameFrameLoop) return;
 
@@ -388,6 +489,7 @@ class Monster {
       // clearInterval(gameFrameInterval);
       // gameFrameLoop = false;
       Status.waveUpdate((Status.wave += 1));
+      Status.checkWave();
       console.log("monster 0");
     }
   }
@@ -436,16 +538,31 @@ class Status {
     gold.innerText = `Gold : ${Status.gold}`;
   }
 
+  // 라이프가 0이 되면 게임 종료
   static checkLife() {
     if (Status.life <= 0) {
       clearInterval(drawFrame);
       clearInterval(gameFrameInterval);
-      document.getElementsByClassName("container")[0].style.display = "none";
+      document.getElementsByClassName("container")[0].style.opacity = "0.1";
       let endpage = document.createElement("div");
       endpage.style =
-        "text-align: center; background-color: black; color: white; vertical-align: middle;";
-      endpage.innerHTML = "<h1>Game Over</h1><br>";
+        "position: absolute; top:20%;width:100%;text-align: center; background-color: black; color: white; vertical-align: middle;";
+      endpage.innerHTML = "<h1>Game Over</h1>";
       document.body.appendChild(endpage);
+    }
+  }
+
+  // 웨이브 모두 클리어시 게임 종료
+  static checkWave() {
+    if (Status.wave > 10) {
+      clearInterval(drawFrame);
+      clearInterval(gameFrameInterval);
+      document.getElementsByClassName("container")[0].style.opacity = "0.1";
+      let clearpage = document.createElement("div");
+      clearpage.style =
+        "text-align: center; background-color: black; color: white; vertical-align: middle;";
+      clearpage.innerHTML = "<h1>모든 웨이브를 클리어 했습니다 !! </h1>";
+      document.body.appendChild(clearpage);
     }
   }
 }
@@ -459,9 +576,62 @@ const bcvsH = 600;
 
 // topbar에 수치 표시
 function statusDisplay() {
-  Status.statusUpdate(1, 1, 3, 20);
+  Status.statusUpdate(1, 1, 3, 30);
   Status.display();
 }
+
+// 판매버튼 및 기능 // 타워 이미지가 안사라짐
+const sellBtn = document.getElementsByClassName("mainbutton2")[0];
+let sellMode = false;
+
+sellBtn.addEventListener("click", () => {
+  if (!sellMode) {
+    sellMode = true;
+    sellBtn.style.border = "1px solid yellow";
+  } else {
+    sellMode = false;
+    sellBtn.style.border = "";
+  }
+  console.log(sellMode);
+});
+
+let interval2;
+
+bcvs.addEventListener("click", function sellTower(e) {
+  // 판매가능 상태 확인
+  if (!sellMode) return;
+
+  // 타워 인덱스를 찾을 기준 좌표
+  let stX;
+  let stY;
+
+  for (let i = 0; i < Tile.tiles.length; i++) {
+    // 마우스 클릭한 곳의 좌표가 각각 타일의 범위 안에 있다면
+    if (
+      Tile.tiles[i].midX + Tile.tileSize / 2 > e.offsetX &&
+      Tile.tiles[i].midY + Tile.tileSize / 2 > e.offsetY &&
+      Tile.tiles[i].midX - Tile.tileSize / 2 < e.offsetX &&
+      Tile.tiles[i].midY - Tile.tileSize / 2 < e.offsetY
+    ) {
+      //해당 타일의 기준 좌표 설정
+      Tile.tiles[i].isInstallable = true;
+      stX = Tile.tiles[i].midX;
+      stY = Tile.tiles[i].midY;
+
+      // 해당 좌표에 있는 타워 찾아내서 제거
+      for (let j = 0; j < Tower.towers.length; j++) {
+        if (Tower.towers[j].x == stX && Tower.towers[j].y == stY) {
+          Status.goldUpdate((Status.gold += Tower.towers[j].gold));
+          console.log(Status.gold);
+
+          Tower.towers.splice(j, 1);
+          drawState();
+          return;
+        }
+      }
+    }
+  }
+});
 
 // 우측 타워 아이템 클릭 이벤트
 const towerClass = document.getElementsByClassName("item");
@@ -473,63 +643,71 @@ for (let i = 0; i < towerClass.length; i++) {
   towerClass[i].addEventListener("click", function (e) {
     if (hasItem) return; // 구입된 상태에서 중복 구매되는거 방지
 
+    // 클릭한 부분이 타워 이미지일 경우에만 진행
     if (Array.from(document.querySelectorAll(".itemimg")).includes(e.target)) {
       if (Status.gold >= e.target.alt.split(";")[0]) {
         selectedImgSrc = e.target.src; // 선택한 이미지 저장
         hasItem = true;
-        Status.goldUpdate((Status.gold -= parseInt(e.target.alt.split(";")[0])));
+        Status.goldUpdate(
+          (Status.gold -= parseInt(e.target.alt.split(";")[0]))
+        );
         console.log("구매성공, 남은 골드 :", Status.gold);
 
         //ks//
-        
         img = new Image();
         img.width = Tower.towerSize;
         img.height = Tower.towerSize;
         img.src = e.target.src;
         img.style.position = "absolute";
 
-        moveImageListener = function(event) {
+        moveImageListener = function (event) {
           document.body.appendChild(img);
-          img.style.left = event.clientX + 10 +'px';
-          img.style.top = event.clientY - 100 +'px';
+          img.style.left = event.clientX + 10 + "px";
+          img.style.top = event.clientY - 100 + "px";
         };
-        document.addEventListener('mousemove', moveImageListener);
-        
+        document.addEventListener("mousemove", moveImageListener);
         //ks//
 
         bcvs.addEventListener(
           "click",
           function placeTower(event) {
             //ks//
-            document.removeEventListener('mousemove', moveImageListener);
+            document.removeEventListener("mousemove", moveImageListener);
             document.body.removeChild(img);
             //ks//
+
+            // 아이템을 구매한 상태인 경우
             if (hasItem) {
               for (let i = 0; i < Tile.tiles.length; i++) {
+                // 마우스 클릭한 곳의 좌표가 각각 타일의 범위 안에 있다면
                 if (
                   Tile.tiles[i].midX + Tile.tileSize / 2 > event.offsetX &&
                   Tile.tiles[i].midY + Tile.tileSize / 2 > event.offsetY &&
                   Tile.tiles[i].midX - Tile.tileSize / 2 < event.offsetX &&
                   Tile.tiles[i].midY - Tile.tileSize / 2 < event.offsetY
                 ) {
+                  // 해당 타일이 타워를 설치 가능한 곳인지 확인 후 현재 구매한 타워의 이미지 생성
                   if (Tile.tiles[i].isInstallable) {
                     let img = new Image();
                     img.width = Tower.towerSize;
                     img.height = Tower.towerSize;
                     img.src = selectedImgSrc; // 현재 선택된 이미지 적용
 
+                    // 타워 인스턴스 생성 (이미지, x, y, )
                     let tower = new Tower(
                       img,
                       Tile.tiles[i].midX,
                       Tile.tiles[i].midY,
-                      5,
+                      parseInt(e.target.alt.split(";")[4]),
                       parseInt(e.target.alt.split(";")[1]),
-                      parseInt(e.target.alt.split(";")[2])
+                      parseInt(e.target.alt.split(";")[2]),
+                      parseInt(e.target.alt.split(";")[3]),
+                      parseInt(e.target.alt.split(";")[0])
                     );
                     tower.draw(bctx);
                     Tower.towers.push(tower);
-                    Tile.tiles[i].isInstallable = false;
-                    hasItem = false;
+                    Tile.tiles[i].isInstallable = false; // 타워가 설치되면 해당 타일은 설치 불가 상태로 변경
+                    hasItem = false; // 현재 구매한 아이템 비워주기
 
                     bcvs.removeEventListener("click", placeTower);
                     console.log("타워 설치");
@@ -538,14 +716,16 @@ for (let i = 0; i < towerClass.length; i++) {
                   } else {
                     console.log("타워 설치 불가");
                     hasItem = false;
-                    Status.goldUpdate(Status.gold += parseInt(e.target.alt.split(";")[0]));
+                    Status.goldUpdate(
+                      (Status.gold += parseInt(e.target.alt.split(";")[0]))
+                    ); // 설치 실패시 해당 타워의 금액 환불
                     console.log(hasItem, Status.gold);
                   }
                 }
               }
             }
           },
-          { once: true }
+          { once: true } // 이벤트 한 번만 실행되게 설정
         );
       } else {
         console.log("골드 부족, 보유 골드 :", Status.gold);
@@ -585,8 +765,8 @@ function stopGameFrameLoop() {
     // drawState();
 
     console.log("stopGameFrameLoop");
-    interval = setTimeout(()=>{
-      Tower.towers.forEach((tower)=>tower.draw(bctx));
+    interval = setTimeout(() => {
+      Tower.towers.forEach((tower) => tower.draw(bctx));
     }, 1);
   }
 }
@@ -616,14 +796,18 @@ let gameFrameInterval;
 const startBtn = document.getElementsByClassName("mainbutton")[0];
 
 startBtn.addEventListener("click", () => {
+  console.log("start");
+  Status.checkWave();
   Monster.setMonsters(
     Monster.monstersbywave[Status.wave],
-    30,
     Tile.tiles[10].midX - 150,
-    Tile.tiles[10].midY
+    Tile.tiles[10].midY,
+    Monster.wavebyhp[Status.wave],
+    Monster.wavebyspeed[Status.wave]
   );
   if (!gameFrameLoop) {
     gameFrameLoop = true;
+    Projectile.projectiles = [];
     gameFrameInterval = setInterval(() => {
       Status.checkLife();
       drawFrame();
